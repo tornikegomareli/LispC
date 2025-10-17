@@ -1,5 +1,7 @@
 Really easy syntax - it's just brackets & your text editor/IDE does the formatting for you.
 
+It changes how one thinks about programming problems - at least for me - and you don’t have to loose the things you like about other languages.
+
 Lots of great books that will really help you grow as a programmer & software engineer. Some free ones that make you a better programmer and design programs like an engineer:
 - https://htdp.org
 - https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book.html
