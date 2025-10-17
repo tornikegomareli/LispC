@@ -4,6 +4,48 @@
 #include <readline/history.h>
 #include "mpc.h"
 
+int number_of_nodes(mpc_ast_t* t) {
+  if (t->children_num == 0) { 
+    return 1; 
+  }
+
+  if (t->children_num >= 1) {
+    int total = 1;
+    for (int i = 0; i < t->children_num; i++) {
+      total = total + number_of_nodes(t->children[i]);
+    }
+    return total;
+  }
+  return 0;
+}
+
+long eval_op(long x, char* op, long y) {
+  if (strcmp(op, "+") == 0) { return x + y; }
+  if (strcmp(op, "-") == 0) { return x - y; }
+  if (strcmp(op, "*") == 0) { return x * y; }
+  if (strcmp(op, "/") == 0) { return x / y; }
+  return 0;
+}
+
+long eval(mpc_ast_t* t) {
+  if(strstr(t->tag, "number")) {
+    return atoi(t->contents);
+  }
+
+  char* op = t->children[1]->contents;
+
+  long x = eval(t->children[2]);
+
+  int i = 3;
+
+  while(strstr(t->children[i]->tag, "expr")) {
+    x = eval_op(x, op, eval(t->children[i]));
+    i++;
+  }
+
+  return x;
+}
+
 int main() {
   /* Create Some Parsers */
   mpc_parser_t* Number = mpc_new("number");
@@ -29,11 +71,11 @@ int main() {
 
     add_history(input);
 
-    /// Parse user input 
+    /// Parse user input
     mpc_result_t r;
     if (mpc_parse("<stdin>", input, Lispy, &r)) {
-      /// if successfully parsed print AST
-      mpc_ast_print(r.output);
+      long result = eval(r.output);
+      printf("%li\n", result);
       mpc_ast_delete(r.output);
     } else {
       /// If parsing failed print error
@@ -45,12 +87,16 @@ int main() {
   }
 
   mpc_cleanup(
-    4, 
+    4,
     Number,
-    Operator, 
+    Operator,
     Expr,
     Lispy
   );
 
   return 0;
 }
+
+
+
+
