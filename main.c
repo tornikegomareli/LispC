@@ -5,8 +5,8 @@
 #include "mpc.h"
 
 int number_of_nodes(mpc_ast_t* t) {
-  if (t->children_num == 0) { 
-    return 1; 
+  if (t->children_num == 0) {
+    return 1;
   }
 
   if (t->children_num >= 1) {
@@ -75,7 +75,12 @@ int main() {
     mpc_result_t r;
     if (mpc_parse("<stdin>", input, Lispy, &r)) {
       long result = eval(r.output);
+
       printf("%li\n", result);
+
+      //mpc_ast_print(r.output);
+      //mpc_ast_delete(r.output);
+
       mpc_ast_delete(r.output);
     } else {
       /// If parsing failed print error
@@ -96,7 +101,3 @@ int main() {
 
   return 0;
 }
-
-
-
-
